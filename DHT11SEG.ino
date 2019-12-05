@@ -3,11 +3,15 @@
 #include "TM1650.h"
 #include <ESP8266WiFi.h>
 #include <dht.h>
+<<<<<<< HEAD
 #include <BH1750FVI.h>
 
 // Create the Lightsensor instance
 BH1750FVI LightSensor(BH1750FVI::k_DevModeContLowRes);
 WiFiClient client;
+=======
+
+>>>>>>> 757e38713e13d3180b873d8f3ca0bffb7d6ce878
 dht DHT;
 
 #define DHT11_PIN D2
@@ -23,6 +27,7 @@ char line[] = "0000";
 float TEMP,HUM;
 byte addr[8];
 byte data[12];
+<<<<<<< HEAD
 //0温度 1湿度 2光强
 byte showWihch = 0;
 
@@ -32,6 +37,14 @@ const char* password = "123546987";//wifi的密码
 const char* host ="api.heclouds.com";//访问的网址
 const int httpPort = 80;//http的端口号
 
+=======
+
+const char* ssid     = "";//wifi的名称
+const char* password = "";//wifi的密码
+
+const char* host ="api.heclouds.com";//访问的网址
+const int httpPort = 80;//http的端口号
+>>>>>>> 757e38713e13d3180b873d8f3ca0bffb7d6ce878
 /*扫描并读取tm1650中的按键码 */
 char buttonReading(void)
 {
@@ -80,6 +93,7 @@ void keyJudge(char buttoncode,char line[4])
 {
    switch(buttoncode)
    {
+<<<<<<< HEAD
     case BUTTON_4:    
         Serial.println("k4");
         showWihch = (++showWihch) % 3;
@@ -106,12 +120,27 @@ void keyJudge(char buttoncode,char line[4])
    }
 }
 
+=======
+    case BUTTON_4: Serial.println("k4");addDisplay3(line);break;
+    case BUTTON_3: Serial.println("k3");addDisplay2(line);break;
+    case BUTTON_2: Serial.println("k2");addDisplay1(line);break;  
+    case BUTTON_1: Serial.println("k1");addDisplay0(line);break;
+    default:Serial.println("nothing");break;
+   }
+}
+
+
+>>>>>>> 757e38713e13d3180b873d8f3ca0bffb7d6ce878
 void setup() 
 {
   Wire.begin(); 
   Serial.begin(9600); 
+<<<<<<< HEAD
   LightSensor.begin();  
   
+=======
+
+>>>>>>> 757e38713e13d3180b873d8f3ca0bffb7d6ce878
   d.init();                                       //初始化
   d.displayOff();
   d.setBrightness(TM1650_MAX_BRIGHT);             //设定亮度
@@ -119,7 +148,11 @@ void setup()
   delay(2000);
   d.displayString(line);
   
+<<<<<<< HEAD
   WiFi.mode(WIFI_STA);
+=======
+ WiFi.mode(WIFI_STA);
+>>>>>>> 757e38713e13d3180b873d8f3ca0bffb7d6ce878
   WiFi.begin(ssid, password);
   
   while (WiFi.status() != WL_CONNECTED) {
@@ -133,6 +166,7 @@ void setup()
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 
+<<<<<<< HEAD
 }
 
 void loop()
@@ -146,6 +180,18 @@ void loop()
 
   int chk = DHT.read11(DHT11_PIN);
   switch (chk){
+=======
+  
+
+}
+int value = 0;
+void loop()
+{
+
+   int chk = DHT.read11(DHT11_PIN);
+    switch (chk)
+  {
+>>>>>>> 757e38713e13d3180b873d8f3ca0bffb7d6ce878
     case DHTLIB_OK:  
          Serial.print("OK,\t"); 
     break;
@@ -159,12 +205,16 @@ void loop()
           Serial.print("Unknown error,\t"); 
     break;
   }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 757e38713e13d3180b873d8f3ca0bffb7d6ce878
   Serial.print(DHT.humidity, 1);
   Serial.print(",\t");
   Serial.println(DHT.temperature, 1);
 
   pinMode(DHT11_PIN, OUTPUT);
+<<<<<<< HEAD
   digitalWrite(DHT11_PIN, LOW);
 
   TEMP = DHT.temperature;
@@ -185,18 +235,48 @@ void loop()
   }
   d.displayString(temp);
   String postdata = String("")+"{\"temperature\":"+TEMP+",\"humidity\":"+HUM+",\"light\":"+lux+"}";
+=======
+    digitalWrite(DHT11_PIN, LOW);
+    Wire.begin(); 
+ // Serial.begin(9600); 
+
+  d.init();                                       //初始化
+  //d.displayOff();
+ // d.setBrightness(TM1650_MAX_BRIGHT);             //设定亮度
+  d.displayOn();
+ 
+    TEMP = DHT.temperature;
+    HUM = DHT.humidity;
+    char temp[]="";
+    dtostrf(TEMP*100,4,0,temp);
+    d.displayString(temp);
+    d.setDot(1,1);
+
+    
+     String postdata = String("")+"{\"temperature\":"+TEMP+",\"humidity\":"+HUM+"}";
+      WiFiClient client;
+  
+>>>>>>> 757e38713e13d3180b873d8f3ca0bffb7d6ce878
   if (!client.connect(host, httpPort)) {
     Serial.println("connection failed");
     return;
   }
   String url = "/devices/571576057/datapoints?type=3";
+<<<<<<< HEAD
   
+=======
+   
+>>>>>>> 757e38713e13d3180b873d8f3ca0bffb7d6ce878
   Serial.print("Requesting URL: ");
   Serial.println(url);
   
   // This will send the request to the server
   client.print(String("POST ") + url + " HTTP/1.1\r\n" +
+<<<<<<< HEAD
                "api-key:iLdZeUIr8qCMsA=BPyHfQckQdrM=\r\n"+
+=======
+               "api-key:\r\n"+
+>>>>>>> 757e38713e13d3180b873d8f3ca0bffb7d6ce878
                "Host:" + host + "\r\n" + 
                "Content-Length:"+postdata.length()+"\r\n\r\n"+
                //"Content-Type: application/x-www-form-urlencoded\r\n\r\n"+
@@ -220,4 +300,8 @@ void loop()
   
   Serial.println();
   Serial.println("closing connection");
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 757e38713e13d3180b873d8f3ca0bffb7d6ce878
