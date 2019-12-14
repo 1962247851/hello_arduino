@@ -4,16 +4,22 @@
 #include <dht.h>
 #include <BH1750FVI.h>
 
-#define DHT11_PIN D2
 #define BUTTON_1 0x44
 #define BUTTON_2 0x45
 #define BUTTON_3 0x46
 #define BUTTON_4 0x47
 
-const char* ssid     = "NULL";//wifi的名称
-const char* password = "123546987";//wifi的密码
+#define DHT11_PIN D2
 const char* host ="api.heclouds.com";//访问的网址
 const int httpPort = 80;//http的端口号
+
+const char* ssid     = "NULL";//wifi的名称
+const char* password = "123546987";//wifi的密码
+const char* url = "/devices/571576057/datapoints?type=3";
+const char* apiKey = "iLdZeUIr8qCMsA=BPyHfQckQdrM=\r\n";
+const char* temp_key = "\"temperature\"";
+const char* hum_key = "\"humidity\"";
+const char* light_key = "\"light\"";
 
 // Create the Lightsensor instance
 BH1750FVI LightSensor(BH1750FVI::k_DevModeContLowRes);
@@ -28,8 +34,6 @@ byte data[12];
 
 //0温度 1湿度 2光强
 byte showWihch = 0;
-
-
 
 /*扫描并读取tm1650中的按键码 */
 char buttonReading(void) {
@@ -140,7 +144,7 @@ void loop() {
 	}
 	d.displayString(temp);
 
-	String postdata = String("")+"{\"temperature\":"+TEMP+",\"humidity\":"+HUM+",\"light\":"+lux+"}";
+	String postdata = String("")+"{"+temp_key+":"+TEMP+","+hum_key+":"+HUM+","+light_key+":"+lux+"}";
 
 	WiFiClient client;
 
@@ -148,13 +152,13 @@ void loop() {
 		Serial.println("connection failed");
 		return;
 	}
-	String url = "/devices/571576057/datapoints?type=3";
+ 
 	Serial.print("Requesting URL: ");
 	Serial.println(url);
 
 	// This will send the request to the server
 	client.print(String("POST ") + url + " HTTP/1.1\r\n" +
-	             "api-key:iLdZeUIr8qCMsA=BPyHfQckQdrM=\r\n"+
+	             "api-key:"+apiKey+
 	             "Host:" + host + "\r\n" +
 	             "Content-Length:"+postdata.length()+"\r\n\r\n"+
 	             //"Content-Type: application/x-www-form-urlencoded\r\n\r\n"+
